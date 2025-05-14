@@ -108,5 +108,4 @@ Follow these instructions to get a copy of the project up and running on your lo
 *   [Next.js](https://nextjs.org/)
 *   [React](https://reactjs.org/)
 *   [Vercel AI SDK](https://sdk.vercel.ai/)
-*   (Add any other significant libraries or frameworks you used, e.g., Tailwind CSS, Chakra UI, etc.)
 
