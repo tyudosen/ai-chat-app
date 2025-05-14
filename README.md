@@ -1,4 +1,4 @@
-# Your AI Chat App Name
+# AI Chat App
 
 A simple and basic AI chat application built using Next.js, React, and the Vercel AI SDK.
 
