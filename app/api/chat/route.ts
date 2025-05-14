@@ -24,6 +24,18 @@ export async function POST(req: Request) {
 						tempreature
 					}
 				}
+			}),
+			convertFarenheitToCelcius: tool({
+				description: 'Converts temperature in farenheit to celsius',
+				parameters: z.object({
+					temperature: z.number().describe('Tempereture in farenheit to convert')
+				}),
+				execute: async ({ temperature }) => {
+					const celsius = Math.round((temperature - 32) * (5 / 9));
+					return {
+						celsius,
+					};
+				}
 			})
 		}
 	});
