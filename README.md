@@ -6,7 +6,7 @@ A simple and basic AI chat application built using Next.js, React, and the Verce
 
 *   [About](#about)
 *   [Features](#features)
-*   [Demo](#demo) (Optional)
+*   [Demo](#demo)
 *   [Getting Started](#getting-started)
     *   [Prerequisites](#prerequisites)
     *   [Installation](#installation)
