@@ -29,7 +29,7 @@ This app serves as a starting point for exploring the capabilities of the Vercel
 *   Send messages to an AI model.
 *   Display AI responses.
 
-## Demo (Optional)
+## Demo
 
 [Link to live demo]
 
