@@ -31,7 +31,7 @@ This app serves as a starting point for exploring the capabilities of the Vercel
 
 ## Demo
 
-[Live demo] (https://ai-chat-app-three-drab.vercel.app/)
+[Live demo](https://ai-chat-app-three-drab.vercel.app/)
 
 ## Getting Started
 
