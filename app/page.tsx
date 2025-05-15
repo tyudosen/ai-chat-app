@@ -1,12 +1,17 @@
 "use client"
 
 import { useChat } from "@ai-sdk/react"
-import { Send } from "lucide-react"
+import { Paperclip, Send } from "lucide-react"
+import Image from "next/image"
+import { useState, useRef } from "react"
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     maxSteps: 3
   })
+
+  const [files, setFiles] = useState<FileList | undefined>(undefined);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="flex flex-col h-screen bg-zinc-50">
@@ -32,6 +37,27 @@ export default function Chat() {
                 }`}
             >
               {message.content ? message.content : <span className="italic font-light">{`calling tool: ${message?.toolInvocations?.[0].toolName}`}</span>}
+              <div>
+                {message?.experimental_attachments
+                  ?.filter(attachment =>
+                    attachment?.contentType?.startsWith('image/'),
+                  )
+                  .map((attachment, index) => attachment.contentType?.startsWith('image/') ? (
+                    <Image
+                      key={`${message.id}-${index}`}
+                      src={attachment.url}
+                      width={500}
+                      height={500}
+                      alt={attachment.name ?? `attachment-${index}`}
+                    />
+                  ) : attachment.contentType?.startsWith('application/pdf') ? (<iframe
+                    key={`${message.id}-${index}`}
+                    src={attachment.url}
+                    width={500}
+                    height={600}
+                    title={attachment.name ?? `attachment-${index}`}
+                  />) : null,)}
+              </div>
             </div>
           </div>
         ))}
@@ -60,7 +86,36 @@ export default function Chat() {
 
       {/* Input area */}
       <div className="border-t p-4">
-        <form onSubmit={handleSubmit} className="flex space-x-2">
+        <form onSubmit={(event) => {
+          handleSubmit(event, {
+            experimental_attachments: files
+          })
+
+          setFiles(undefined)
+
+          if (fileInputRef.current) {
+            fileInputRef.current.value = ''
+          }
+        }}
+          className="flex space-x-2">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="p-2 text-zinc-500 hover:text-blue-500 transition-colors"
+            title="Attach file"
+          >
+            <Paperclip size={20} />
+          </button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={(e) => setFiles(e.target.files || undefined)}
+            className="hidden"
+            multiple
+          />
+          {files && files.length > 0 && (
+            <div className="flex items-center text-sm text-zinc-500">{files.length} file(s) selected</div>
+          )}
           <input
             type="text"
             value={input}
@@ -72,11 +127,10 @@ export default function Chat() {
           <button
             type="submit"
             className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
-            disabled={isLoading || !input.trim()}
+            disabled={isLoading || (!input.trim() && (!files || files.length === 0))}
           >
             <Send size={20} />
-          </button>
-        </form>
+          </button>        </form>
       </div>
     </div>
   )

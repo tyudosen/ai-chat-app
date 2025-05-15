@@ -1,17 +1,21 @@
 import { createResource } from '@/lib/actions/resources';
 import { findRelevantContent } from '@/lib/ai/embedding';
 import { openai } from '@ai-sdk/openai';
-import { streamText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { streamText, tool, type Message } from 'ai';
 import { z } from 'zod'
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-	const { messages } = await req.json();
+	const { messages }: { messages: Message[] } = await req.json();
+
+
+	const messageHavePDF = messages.some(message => message.experimental_attachments?.some(attachement => attachement.contentType === 'application/pdf'))
 
 	const result = streamText({
-		model: openai('gpt-4o'),
+		model: messageHavePDF ? anthropic('claude-3-5-sonnet-latest') : openai('gpt-4o'),
 		messages,
 		system: `You are a helpful assistant. Check your knowledge base before answering any questions.
 			Only respond to questions using information from tool calls.
@@ -27,7 +31,8 @@ export async function POST(req: Request) {
 				execute: async ({ content }) => createResource({ content })
 			}),
 			getInformation: tool({
-				description: `get information from your knowledge base to answer questions.`,
+				description: `get information from your knowledge base to answer questions.
+						search before answering questions.`,
 				parameters: z.object({
 					question: z.string().describe('the users question'),
 				}),
