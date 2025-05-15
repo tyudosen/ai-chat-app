@@ -4,7 +4,9 @@ import { useChat } from "@ai-sdk/react"
 import { Send } from "lucide-react"
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat()
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+    maxSteps: 3
+  })
 
   return (
     <div className="flex flex-col h-screen bg-zinc-50">
@@ -29,7 +31,7 @@ export default function Chat() {
                 : "bg-zinc-200 text-zinc-800 rounded-bl-none"
                 }`}
             >
-              {message.content}
+              {message.content ? message.content : <span className="italic font-light">{`calling tool: ${message?.toolInvocations?.[0].toolName}`}</span>}
             </div>
           </div>
         ))}
