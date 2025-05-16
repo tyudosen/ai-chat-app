@@ -17,9 +17,10 @@ export async function POST(req: Request) {
 	const result = streamText({
 		model: messageHavePDF ? anthropic('claude-3-5-sonnet-latest') : openai('gpt-4o'),
 		messages,
-		system: `You are a helpful assistant. Check your knowledge base before answering any questions.
-			Only respond to questions using information from tool calls.
-			if no relevant information is found in the tool calls, respond, "Sorry, I don't know."`,
+		system: `You are an helpful and polite assitant. You will answer questions from your knowledge base.
+			If you do not have enough context to answer ask for more. You can store relevant information 
+			in your knowledge base with addResource and you can fetch info to answer questions using getInformation. Always save 
+			new information relevant to the user`,
 		tools: {
 			addResource: tool({
 				description: `add a resource to your knowledge base. 

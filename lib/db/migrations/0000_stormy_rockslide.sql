@@ -1,4 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS vector;
 
 CREATE TABLE "resources" (
 	"id" varchar(191) PRIMARY KEY NOT NULL,
